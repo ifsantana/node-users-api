@@ -25,4 +25,16 @@ router.delete('/:id', (req, res) => {
     return res.status(200).json(users);
 })
 
+router.put('/:id', (req, res) => {
+    let { id } = req.params;
+    let { name, email, age } = req.body;
+    let currentUser = users.find(user => user.id.toString() === id);
+    if (currentUser) {
+        currentUser.name = name;
+        currentUser.email = email;
+        currentUser.age = age;
+    }
+    return res.status(200).json(users);
+})
+
 module.exports = router;
