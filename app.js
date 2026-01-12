@@ -2,10 +2,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 var usersRouter = require('./controllers/users');
+const sequelize = require("./config/sequelize");
 
 var app = express();
+
+sequelize.sync().then(() => {
+    console.log("Sequelize connection successfull");
+});
 
 app.use(logger('dev'));
 app.use(express.json());
