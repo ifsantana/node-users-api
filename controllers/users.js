@@ -1,15 +1,20 @@
 var express = require('express');
+var { usersLimiter } = require('../middlewares/limiters');
+
 var router = express.Router();
 const { User } = require('../models');
 const sequelize = require('../config/sequelize');
 const {Transaction} = require("sequelize");
+const logger = require("morgan");
+
+
 
 // var users = [
 //     { id: 1, name: 'John', email: 'test@gmail.com', age: 35 },
 //     { id: 2, name: 'Jane', email: 'test2@gmail.com', age: 28 },
 // ]
 
-router.get('/', async (req, res) => {
+router.get('/', usersLimiter, async (req, res) => {
     const users = await User.findAll();
     return res.status(200).json(users);
 });
