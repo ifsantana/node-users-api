@@ -15,8 +15,25 @@ const logger = require("morgan");
 // ]
 
 router.get('/', usersLimiter, async (req, res) => {
-    const users = await User.findAll();
-    return res.status(200).json(users);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    const { count, rows }  = await User.findAndCountAll({
+        offset,
+        limit,
+        order: [['age', 'DESC']]
+    });
+
+    return res.status(200).json({
+        data: rows,
+        pagination: {
+            total: count,
+            page,
+            limit,
+            pages: Math.ceil(count / limit)
+        }
+    });
 });
 
 router.post('/', async (req, res) => {
